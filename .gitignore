@@ -1,0 +1,41 @@
+# Ignorar o ambiente virtual
+venv/
+.env/
+
+# Ignorar arquivos de configuração do ambiente virtual
+.env/*
+!.env/.gitkeep  # Mantenha um arquivo .gitkeep se quiser versionar a pasta vazia
+
+# Ignorar cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignorar arquivos de configuração do VS Code (opcional)
+.vscode/
+
+# Ignorar arquivos de configuração do PyCharm (opcional)
+.idea/
+
+# Ignorar arquivos de distribuição / build
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Ignorar arquivos de teste e coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Ignorar arquivos de log e banco de dados
+*.log
+*.sqlite3
+
+# Ignorar arquivos de configuração local
+local_settings.py
+settings_local.py
+
+# Ignorar arquivos de sistema
+.DS_Store
+Thumbs.db
