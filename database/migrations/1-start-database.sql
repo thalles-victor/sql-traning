@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS "brand" (
+  id VARCHAR(150) PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  dsecription VARCHAR(255),
+  created_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "car" (
+  id VARCHAR(100) PRIMARY KEY,
+  brand_id VARCHAR(100) NOT NULL,
+  model VARCHAR(100) NOT NULL,
+  yearn SMALLINT NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  CONSTRAINT fk_brand_id
+    FOREIGN KEY (brand_id)
+    REFERENCES "brand"(id)
+    ON DELETE CASCADE
+);
