@@ -1,6 +1,10 @@
 from flask import Flask, make_response, jsonify, request
 from database.db import cars
 import uuid
+from repositories.BrandRepository import BrandRepository
+from datetime import datetime
+
+brandRepository = BrandRepository()
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -12,20 +16,27 @@ def get_cars():
         jsonify(message="list of the cars", data =cars)
     )
 
-@app.route("/cars", methods=["POST"])
+@app.route("/brand", methods=["POST"])
 def create_car():
     body = request.json
 
-    carEntity = {
-        "id": uuid.uuid4(),
-        "brand": body["brand"],
-        "model": body["model"],
-        "year": body["year"]
+    brandEntity = {
+        "id": str(uuid.uuid4()),
+        "name": body["name"],
+        "description": body["description"],
+        "created_at": datetime.now().isoformat()
     }
 
-    cars.append(carEntity)
-    return make_response(
-      jsonify(message="car created", data=carEntity)
+    created_brand = brandRepository.create(
+        brandEntity["id"],
+        brandEntity["name"],
+        brandEntity["description"],
+        brandEntity["created_at"],
     )
+
+    return make_response(
+        jsonify(message="Brand created", data=created_brand)
+    )
+
 
 app.run()

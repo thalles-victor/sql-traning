@@ -1,14 +1,9 @@
 import os 
 import psycopg2
-from psycopg2 import sql 
+from psycopg2 import sql
+from connection import connection_config
 
-db_config = {
-  'dbname':'mydatabase',
-  'user':'user',
-  'password':'password',
-  'host':'localhost',
-  'port':'5432'
-}
+
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 migrations_dir = os.path.join(script_dir, 'migrations')
@@ -16,7 +11,7 @@ migrations_dir = os.path.join(script_dir, 'migrations')
 def run_migrations():
   try:
     # Connect on the database
-    conn = psycopg2.connect(**db_config)
+    conn = psycopg2.connect(**connection_config)
     cursor = conn.cursor()
 
     print(os.listdir(migrations_dir))

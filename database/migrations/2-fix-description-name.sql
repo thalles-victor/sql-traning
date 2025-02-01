@@ -1,0 +1,1 @@
+ALTER TABLE "brand" RENAME COLUMN "dsecription" TO "description";
