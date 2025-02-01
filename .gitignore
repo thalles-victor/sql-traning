@@ -39,3 +39,4 @@ settings_local.py
 # Ignorar arquivos de sistema
 .DS_Store
 Thumbs.db
+.history
