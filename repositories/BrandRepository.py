@@ -6,18 +6,23 @@ class BrandRepository:
   def create(self, id: str, name: str, description: str, created_at: str):
     conn = psycopg2.connect(**connection_config)
     cursor= conn.cursor()
+    try:
+      query = 'INSERT INTO "brand" (id, name, description, created_at) VALUES (%s, %s, %s, %s) RETURNING *;'
+      cursor.execute(query, (id, name, description, created_at))
 
-    query = 'INSERT INTO "brand" (id, name, description, created_at) VALUES (%s, %s, %s, %s) RETURNING *;'
-    cursor.execute(query, (id, name, description, created_at))
+      result = cursor.fetchone()
+      conn.commit()
 
-    result = cursor.fetchone()
-    conn.commit()
+      cursor.close()
+      conn.close()
 
-    cursor.close()
-    conn.close()
-
-    return result
-  
+      return result
+    except:
+      pass
+    finally:
+      cursor.close()
+      conn.close()
+      
   def find_many(self, page=1, limit=10, filters=None):
     conn = psycopg2.connect(**connection_config)
     cursor = conn.cursor()
@@ -48,11 +53,12 @@ class BrandRepository:
       cursor.execute(query, tuple(params))
       results = cursor.fetchall()
 
-      # Obtém os nomes das colunas
-      colunas = [desc[0] for desc in cursor.description]
-
-      # Converte a lista de tuplas para uma lista de dicionários
-      data = [dict(zip(colunas, row)) for row in results]
+      
+      # converte a tupla vinda da query
+      #  e converte em um dicionário para ficar que nem
+      # um objeto como no javascript
+      columns = [desc[0] for desc in cursor.description]
+      data = [dict(zip(columns, row)) for row in results]
 
 
       # count all registers without pagination
@@ -74,6 +80,36 @@ class BrandRepository:
         "limit": limit,
         "total_pages": (total_items + limit -1) // limit
       }
+    except Exception as e:
+      print("Error:", e)
+      return {"errors": "Database error"}
+    finally:
+      cursor.close()
+      conn.close()
+  
+  def getBy(self, unqKey=str, valueFromUnqKey=str):
+    conn = psycopg2.connect(**connection_config)
+    cursor = conn.cursor()
+
+    try:
+      query = sql.SQL('SELECT {fields} FROM {table} WHERE {pkey} = %s').format(
+        fields=sql.SQL(', ').join([
+          sql.Identifier('id'),
+          sql.Identifier('name'),
+          sql.Identifier("model"),
+          sql.Identifier("year"),
+          sql.Identifier('created_at'),
+        ]),
+        table=sql.Identifier('brand'),
+        pkey=sql.Identifier(unqKey))
+      
+
+      cursor.execute(query, [valueFromUnqKey])
+      result = cursor.fetchone()
+
+      print("Query result is: ", result)
+
+      return result
     except Exception as e:
       print("Error:", e)
       return {"errors": "Database error"}
