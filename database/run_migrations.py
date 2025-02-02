@@ -1,12 +1,17 @@
 import os 
 import psycopg2
 from psycopg2 import sql
-from connection import connection_config
-
-
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 migrations_dir = os.path.join(script_dir, 'migrations')
+
+connection_config = {
+  'dbname':'mydatabase',
+  'user':'user',
+  'password':'password',
+  'host':'localhost',
+  'port':'5432'
+}
 
 def run_migrations():
   try:
@@ -35,5 +40,3 @@ def run_migrations():
   finally:
     if conn is not None:
       conn.close()
-
-run_migrations()

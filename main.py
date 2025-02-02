@@ -1,8 +1,13 @@
+
+from database.run_migrations import run_migrations
 from flask import Flask, make_response, jsonify, request
 from database.db import cars
 import uuid
 from repositories.BrandRepository import BrandRepository
 from datetime import datetime
+from database.connection import connection_config
+
+run_migrations()
 
 brandRepository = BrandRepository()
 
@@ -63,5 +68,5 @@ def find_brands():
     print(result["data"])
 
     return  make_response(jsonify(message="Brands limit", data = result["data"], meta=meta))
-
-app.run()
+if __name__ == "__main__": 
+    app.run(debug=True)
